@@ -1,0 +1,1944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>READING QUEST: THE LOST TREASURE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Fredoka:wght@500;600;700&family=Nunito:ital,wght@0,500;0,600;0,700;0,800;1,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --parchment-light: #fdf6e3;
+      --parchment-mid: #f3e2be;
+      --parchment-dark: #dcc08e;
+      --ink-brown: #3b2314;
+      --gold-bright: #f59e0b;
+      --gold-deep: #b45309;
+      --ocean-deep: #0b3954;
+      --ocean-mid: #087e8b;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: radial-gradient(circle at 50% 20%, #115e73 0%, #082f49 65%, #041b2d 100%);
+      color: var(--ink-brown);
+      min-height: 100vh;
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    .font-pirate {
+      font-family: 'Cinzel Decorative', serif;
+    }
+
+    .font-display {
+      font-family: 'Fredoka', sans-serif;
+    }
+
+    /* Parchment Texture & Antique Borders */
+    .parchment-card {
+      background: linear-gradient(145deg, #fffaf0 0%, #f5e6c8 55%, #ead2a4 100%);
+      border: 4px solid #8c5828;
+      box-shadow:
+        0 14px 30px rgba(0, 0, 0, 0.45),
+        inset 0 0 28px rgba(166, 112, 54, 0.25);
+      border-radius: 1.25rem;
+      position: relative;
+    }
+
+    .parchment-inner {
+      background: rgba(255, 251, 240, 0.72);
+      border: 2px dashed #b07d48;
+      border-radius: 1rem;
+    }
+
+    .wood-panel {
+      background: linear-gradient(180deg, #5c3419 0%, #3d210e 100%);
+      border: 3px solid #c98a3c;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,220,150,0.3);
+      color: #fef3c7;
+    }
+
+    /* Pirate 3D Tactile Buttons */
+    .btn-pirate {
+      background: linear-gradient(180deg, #fbbf24 0%, #d97706 100%);
+      border: 3px solid #78350f;
+      color: #2d1404;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+      box-shadow: 0 5px 0 #78350f, 0 10px 18px rgba(0,0,0,0.35);
+      transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.15s ease;
+    }
+    .btn-pirate:hover:not(:disabled) {
+      filter: brightness(1.06);
+      transform: translateY(-2px);
+      box-shadow: 0 7px 0 #78350f, 0 14px 22px rgba(0,0,0,0.4);
+    }
+    .btn-pirate:active:not(:disabled) {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #78350f, 0 4px 8px rgba(0,0,0,0.3);
+    }
+    .btn-pirate:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      filter: grayscale(0.35);
+    }
+
+    .btn-emerald {
+      background: linear-gradient(180deg, #34d399 0%, #059669 100%);
+      border: 3px solid #064e3b;
+      color: #ffffff;
+      font-family: 'Fredoka', sans-serif;
+      font-weight: 700;
+      box-shadow: 0 5px 0 #064e3b, 0 10px 18px rgba(0,0,0,0.3);
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .btn-emerald:hover:not(:disabled) {
+      transform: translateY(-2px);
+      filter: brightness(1.06);
+    }
+    .btn-emerald:active:not(:disabled) {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #064e3b;
+    }
+    .btn-emerald:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    /* Animations */
+    @keyframes floatShip {
+      0%, 100% { transform: translateY(0px) rotate(-1.5deg); }
+      50% { transform: translateY(-9px) rotate(2deg); }
+    }
+    @keyframes driftCloud {
+      0% { transform: translateX(-12px); }
+      50% { transform: translateX(14px); }
+      100% { transform: translateX(-12px); }
+    }
+    @keyframes pulseGlow {
+      0%, 100% { filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.7)); transform: scale(1); }
+      50% { filter: drop-shadow(0 0 22px rgba(251, 191, 36, 1)); transform: scale(1.04); }
+    }
+    @keyframes waveMove {
+      0% { transform: translateX(0); }
+      50% { transform: translateX(-18px); }
+      100% { transform: translateX(0); }
+    }
+    @keyframes spinSlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.9) translateY(10px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .anim-ship { animation: floatShip 4.2s ease-in-out infinite; transform-origin: center; }
+    .anim-cloud { animation: driftCloud 9s ease-in-out infinite; }
+    .anim-glow { animation: pulseGlow 2.6s ease-in-out infinite; }
+    .anim-wave { animation: waveMove 5s ease-in-out infinite; }
+    .anim-spin-slow { animation: spinSlow 45s linear infinite; }
+    .anim-pop { animation: popIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #1e293b; }
+    ::-webkit-scrollbar-thumb { background: #b45309; border-radius: 999px; }
+  </style>
+</head>
+<body class="antialiased selection:bg-amber-300 selection:text-amber-950">
+
+  <!-- TOP PERSISTENT HUD (Visible once quest begins) -->
+  <header id="game-hud" class="hidden sticky top-0 z-40 wood-panel px-3 py-2 sm:px-6 border-b-4 border-amber-500">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+      <!-- Brand + Team Info -->
+      <div class="flex items-center gap-3">
+        <button onclick="goToMap()" title="Return to Archipelago Map" class="flex items-center gap-2 bg-amber-900/70 hover:bg-amber-800 px-3 py-1.5 rounded-xl border border-amber-400/50 transition">
+          <span class="text-2xl">🧭</span>
+          <div class="text-left">
+            <div class="text-[11px] uppercase tracking-wider text-amber-300 font-bold leading-none">Expedition Crew</div>
+            <div id="hud-team-name" class="font-display text-sm sm:text-base font-bold text-white leading-tight">Sea Explorers</div>
+          </div>
+        </button>
+
+        <!-- 5-Fragment Medallion SVG Tracker -->
+        <div class="hidden md:flex items-center gap-2 bg-black/30 px-3 py-1 rounded-xl border border-amber-500/40" title="Collected Treasure Map Fragments">
+          <svg id="hud-medallion-svg" width="38" height="38" viewBox="0 0 100 100" class="shrink-0">
+            <circle cx="50" cy="50" r="45" fill="#1e293b" stroke="#92400e" stroke-width="5"/>
+            <!-- 5 Pie Slices representing fragments -->
+            <path id="frag-wedge-1" d="M50,50 L50,7 A43,43 0 0,1 91,37 Z" fill="#334155" stroke="#78350f" stroke-width="2"/>
+            <path id="frag-wedge-2" d="M50,50 L91,37 A43,43 0 0,1 75,85 Z" fill="#334155" stroke="#78350f" stroke-width="2"/>
+            <path id="frag-wedge-3" d="M50,50 L75,85 A43,43 0 0,1 25,85 Z" fill="#334155" stroke="#78350f" stroke-width="2"/>
+            <path id="frag-wedge-4" d="M50,50 L25,85 A43,43 0 0,1 9,37 Z" fill="#334155" stroke="#78350f" stroke-width="2"/>
+            <path id="frag-wedge-5" d="M50,50 L9,37 A43,43 0 0,1 50,7 Z" fill="#334155" stroke="#78350f" stroke-width="2"/>
+            <circle cx="50" cy="50" r="13" fill="#b45309" stroke="#fef08a" stroke-width="2"/>
+            <text x="50" y="54" text-anchor="middle" fill="#fff" font-size="12" font-weight="bold" id="hud-frag-count">0/5</text>
+          </svg>
+          <div>
+            <div class="text-[10px] uppercase tracking-wider text-amber-300 font-bold">Fragments</div>
+            <div id="hud-frag-label" class="text-xs font-bold text-amber-100">0 of 5 Found</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Center Stats -->
+      <div class="flex items-center gap-2 sm:gap-4">
+        <div class="bg-black/35 px-3 py-1 rounded-xl border border-amber-500/30 text-center">
+          <div class="text-[10px] uppercase text-amber-300 font-bold">Islands</div>
+          <div id="hud-islands-done" class="font-display text-sm sm:text-base font-bold text-emerald-300">0 / 5</div>
+        </div>
+        <div class="bg-black/35 px-3 py-1 rounded-xl border border-amber-500/30 text-center">
+          <div class="text-[10px] uppercase text-amber-300 font-bold">Quest Points</div>
+          <div id="hud-score" class="font-display text-sm sm:text-base font-bold text-amber-300">0 pts</div>
+        </div>
+        <div class="hidden sm:block bg-black/35 px-3 py-1 rounded-xl border border-amber-500/30 text-center">
+          <div class="text-[10px] uppercase text-amber-300 font-bold">Badges</div>
+          <div id="hud-badges-count" class="font-display text-sm sm:text-base font-bold text-sky-300">0 🏆</div>
+        </div>
+      </div>
+
+      <!-- Right Action Controls -->
+      <div class="flex items-center gap-1.5 sm:gap-2">
+        <button onclick="openRosterModal()" class="bg-sky-800 hover:bg-sky-700 text-white text-xs sm:text-sm font-bold px-2.5 py-1.5 rounded-xl border border-sky-400/50 flex items-center gap-1 transition" title="View Crew Roles & Badges">
+          <span>👥</span><span class="hidden sm:inline">Crew & Roles</span>
+        </button>
+        <button onclick="toggleSound()" id="sound-toggle-btn" class="bg-amber-800 hover:bg-amber-700 text-amber-100 text-xs sm:text-sm font-bold px-2.5 py-1.5 rounded-xl border border-amber-400/50 transition" title="Toggle Pirate Sound Effects">
+          🔊
+        </button>
+        <button onclick="confirmResetModal()" class="bg-rose-900/90 hover:bg-rose-800 text-rose-100 text-xs sm:text-sm font-bold px-2.5 py-1.5 rounded-xl border border-rose-400/50 transition" title="Reset Quest Progress">
+          ↺ <span class="hidden md:inline">Reset</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN APPLICATION STAGE -->
+  <main id="app-stage" class="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-6">
+    <!-- Dynamic Screen Container -->
+    <div id="screen-container"></div>
+  </main>
+
+  <!-- CUSTOM MODAL OVERLAY (Replaces alert/confirm & renders Secret Clue Cards) -->
+  <div id="modal-backdrop" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div id="modal-box" class="parchment-card w-full max-w-2xl p-5 sm:p-7 anim-pop my-auto"></div>
+  </div>
+
+  <!-- TOAST MESSAGE BOX -->
+  <div id="toast-box" class="fixed bottom-5 right-5 z-50 pointer-events-none transition-all duration-300 opacity-0 translate-y-4">
+    <div id="toast-content" class="wood-panel px-4 py-3 rounded-2xl text-sm sm:text-base font-bold flex items-center gap-2 shadow-2xl"></div>
+  </div>
+
+  <script>
+    /* =========================================================================
+       1. WEB AUDIO SYNTHESIZER (Pirate Chimes, Page Flips, Fanfare, Error Buzz)
+       ========================================================================= */
+    const SoundFX = {
+      enabled: true,
+      ctx: null,
+      init() {
+        if (!this.ctx) {
+          const AudioCtx = window.AudioContext || window.webkitAudioContext;
+          if (AudioCtx) this.ctx = new AudioCtx();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      },
+      playTone(freq, type = 'triangle', duration = 0.2, delay = 0, vol = 0.14) {
+        if (!this.enabled) return;
+        try {
+          this.init();
+          if (!this.ctx) return;
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = type;
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime + delay);
+          gain.gain.setValueAtTime(0.001, this.ctx.currentTime + delay);
+          gain.gain.exponentialRampToValueAtTime(vol, this.ctx.currentTime + delay + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + delay + duration);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(this.ctx.currentTime + delay);
+          osc.stop(this.ctx.currentTime + delay + duration + 0.03);
+        } catch (e) {}
+      },
+      click() { this.playTone(520, 'sine', 0.09, 0, 0.1); },
+      pageFlip() {
+        this.playTone(340, 'triangle', 0.08, 0, 0.08);
+        this.playTone(480, 'triangle', 0.1, 0.05, 0.08);
+      },
+      success() {
+        this.playTone(523.25, 'triangle', 0.18, 0, 0.15);
+        this.playTone(659.25, 'triangle', 0.18, 0.12, 0.15);
+        this.playTone(783.99, 'triangle', 0.3, 0.24, 0.18);
+      },
+      error() {
+        this.playTone(210, 'sawtooth', 0.22, 0, 0.12);
+        this.playTone(175, 'sawtooth', 0.28, 0.16, 0.12);
+      },
+      fanfare() {
+        const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50];
+        const times = [0, 0.13, 0.26, 0.4, 0.62, 0.78];
+        notes.forEach((n, i) => this.playTone(n, 'triangle', 0.28, times[i], 0.18));
+      }
+    };
+
+    function toggleSound() {
+      SoundFX.enabled = !SoundFX.enabled;
+      document.getElementById('sound-toggle-btn').textContent = SoundFX.enabled ? '🔊' : '🔇';
+      if (SoundFX.enabled) SoundFX.click();
+      showToast(SoundFX.enabled ? '🔊 Sound Effects ON' : '🔇 Sound Effects Muted');
+    }
+
+    function showToast(msg) {
+      const box = document.getElementById('toast-box');
+      const content = document.getElementById('toast-content');
+      content.textContent = msg;
+      box.classList.remove('opacity-0', 'translate-y-4');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => {
+        box.classList.add('opacity-0', 'translate-y-4');
+      }, 2600);
+    }
+
+    /* =========================================================================
+       2. CURRICULUM & ISLAND MISSION DATA (YEAR 6 ESL - CEFR A2/B1 LEVEL)
+       ========================================================================= */
+    const ROLES = [
+      {
+        id: 'reader',
+        title: 'THE READER',
+        icon: '📜',
+        color: 'bg-amber-100 border-amber-500 text-amber-950',
+        badgeBg: 'bg-amber-600 text-white',
+        duty: 'Reads their clue card aloud clearly to the team and shares key details.'
+      },
+      {
+        id: 'hunter',
+        title: 'THE CLUE HUNTER',
+        icon: '🔍',
+        color: 'bg-emerald-100 border-emerald-500 text-emerald-950',
+        badgeBg: 'bg-emerald-600 text-white',
+        duty: 'Spots keywords, numbers, names, and exact textual evidence.'
+      },
+      {
+        id: 'thinker',
+        title: 'THE THINKER',
+        icon: '🧠',
+        color: 'bg-sky-100 border-sky-500 text-sky-950',
+        badgeBg: 'bg-sky-600 text-white',
+        duty: 'Connects all four clues, infers hidden meanings, and suggests logical ideas.'
+      },
+      {
+        id: 'captain',
+        title: 'THE TEAM CAPTAIN',
+        icon: '👑',
+        color: 'bg-purple-100 border-purple-500 text-purple-950',
+        badgeBg: 'bg-purple-600 text-white',
+        duty: 'Leads group discussion, checks everyone agrees, and submits the final answer.'
+      }
+    ];
+
+    const ISLANDS = [
+      {
+        id: 1,
+        name: 'Island 1: The Mysterious Jungle',
+        shortName: 'Mysterious Jungle',
+        skill: 'Scanning & Specific Information',
+        badgeName: 'Eagle-Eyed Scanners',
+        badgeIcon: '🦜',
+        themeColor: '#15803d',
+        fragmentClue: 'JUNGLE CLUE: The treasure is buried beside the Twin Banyan Trees, NOT near the waterfall.',
+        intro: 'Thick emerald vines cover this tropical island. Each explorer has found a torn scout report describing a different landmark. Combine your facts to locate the hidden chest!',
+        discussionPrompt: 'Discuss your clues! Which landmarks have traps or danger, and which exact spot matches all four scout notes?',
+        clues: [
+          {
+            roleIndex: 0,
+            cardTitle: 'Scout Note A (North Trail)',
+            passage: 'Near the roaring Silver Waterfall, the ground is flooded with deep mud. Do NOT dig near the waterfall because the chest was moved higher up the hill.',
+            keywords: ['Silver Waterfall', 'flooded', 'Do NOT dig'],
+            prompt: 'Read this note aloud. Tell your team why the Silver Waterfall is the wrong place!'
+          },
+          {
+            roleIndex: 1,
+            cardTitle: 'Scout Note B (Canopy Watch)',
+            passage: 'At the Giant Bamboo Grove, wild monkeys guard the branches and drop heavy coconuts. Our captain wrote: "Look for a place where two giant trees grow side by side."',
+            keywords: ['Bamboo Grove', 'two giant trees', 'side by side'],
+            prompt: 'Spot the exact clue about what kind of trees mark the hiding place.'
+          },
+          {
+            roleIndex: 2,
+            cardTitle: 'Scout Note C (Old Compass Log)',
+            passage: 'The Hollow Stone Cave smells like bats and has zero sunlight. Instead, walk east until you find the Twin Banyan Trees with red orchids blooming on their roots.',
+            keywords: ['Hollow Stone Cave', 'Twin Banyan Trees', 'red orchids'],
+            prompt: 'Connect this with Note B! What is the exact name of the landmark?'
+          },
+          {
+            roleIndex: 3,
+            cardTitle: 'Scout Note D (Captain’s Sketch)',
+            passage: 'Behind the Twin Banyan Trees lies a flat moss rock shaped like a turtle shell. The first bronze map fragment is buried directly under that turtle-shaped rock!',
+            keywords: ['Twin Banyan Trees', 'turtle shell', 'buried directly under'],
+            prompt: 'Lead the discussion! Ask every member to share their landmark before choosing.'
+          }
+        ],
+        partA: {
+          question: 'Part A (Scanning Map Locations): Based on all 4 scout notes, where is the first treasure fragment buried?',
+          options: [
+            { id: 'a1', text: 'Under the muddy bank of the Silver Waterfall', icon: '🌊' },
+            { id: 'a2', text: 'Inside the dark Hollow Stone Cave', icon: '🦇' },
+            { id: 'a3', text: 'Under a turtle-shaped rock behind the Twin Banyan Trees', icon: '🌳' },
+            { id: 'a4', text: 'At the center of the Giant Bamboo Grove', icon: '🎋' }
+          ],
+          correct: 'a3',
+          hint: 'Check Scout Notes A, B, and C again! Note A rules out the waterfall, Note C rules out the cave, and Notes C & D name the exact trees and rock.'
+        },
+        partB: {
+          question: 'Part B (Specific Details): Which detail is TRUE according to the jungle passages?',
+          options: [
+            { id: 'b1', text: 'Blue ferns grow on the Twin Banyan Trees', icon: '🌿' },
+            { id: 'b2', text: 'Red orchids bloom on the roots of the Twin Banyan Trees', icon: '🌺' },
+            { id: 'b3', text: 'Monkeys guard the Silver Waterfall', icon: '🐒' }
+          ],
+          correct: 'b2',
+          hint: 'Ask the Reader of Scout Note C to scan the second sentence for the colour of the flowers!'
+        }
+      },
+      {
+        id: 2,
+        name: "Island 2: The Pirate's Village",
+        shortName: "Pirate's Village",
+        skill: 'Vocabulary & Contextual Clues',
+        badgeName: 'Word Detectives',
+        badgeIcon: '⚓',
+        themeColor: '#b45309',
+        fragmentClue: 'VILLAGE CLUE: Follow the safe harbour lantern at midnight when the tide is low.',
+        intro: 'Creaking wooden docks and weathered noticeboards fill this old pirate harbour. Each explorer found a message containing a mysterious bolded word. Use context clues together to crack the code!',
+        discussionPrompt: 'Share the sentences around your bolded word! How do the surrounding clues explain what each word means?',
+        clues: [
+          {
+            roleIndex: 0,
+            cardTitle: 'Harbour Sign #1',
+            passage: 'WARNING: Sailing through Shark Reef during a storm is <strong class="text-amber-800 underline">treacherous</strong>! Sharp hidden rocks can easily tear a wooden ship apart.',
+            keywords: ['treacherous', 'Sharp hidden rocks', 'tear a ship apart'],
+            prompt: 'Read the warning aloud. Ask your team: Does "treacherous" mean safe or very dangerous?'
+          },
+          {
+            roleIndex: 1,
+            cardTitle: 'Quartermaster List #2',
+            passage: 'Before a long sea voyage, sailors must pack enough <strong class="text-amber-800 underline">provisions</strong>—such as barrels of fresh water, dried fruit, salted fish, and biscuits.',
+            keywords: ['provisions', 'fresh water', 'dried fruit', 'biscuits'],
+            prompt: 'Highlight the examples listed right after the dash (—) to define "provisions".'
+          },
+          {
+            roleIndex: 2,
+            cardTitle: 'Captain’s Letter #3',
+            passage: 'The secret map was written in strange pirate symbols, so we needed a clever scholar to <strong class="text-amber-800 underline">decipher</strong> the hidden message into plain English.',
+            keywords: ['decipher', 'strange symbols', 'into plain English'],
+            prompt: 'Infer what "decipher" means when changing secret symbols into normal words.'
+          },
+          {
+            roleIndex: 3,
+            cardTitle: 'Lookout Note #4',
+            passage: 'To stop greedy thieves from stealing the silver compass, Captain Ruby <strong class="text-amber-800 underline">concealed</strong> it inside a hollow wooden barrel behind the tavern.',
+            keywords: ['concealed', 'stop thieves', 'inside a hollow barrel'],
+            prompt: 'Lead the group! Review all 4 words: treacherous, provisions, decipher, concealed.'
+          }
+        ],
+        partA: {
+          question: 'Part A (Vocabulary Match): Which pair correctly matches TWO of the bolded pirate words with their meanings?',
+          options: [
+            { id: 'a1', text: 'treacherous = very dangerous  |  provisions = food and water supplies', icon: '🧭' },
+            { id: 'a2', text: 'treacherous = calm and sunny  |  provisions = gold jewellery', icon: '☀️' },
+            { id: 'a3', text: 'decipher = throw into the sea  |  concealed = painted bright yellow', icon: '🎨' },
+            { id: 'a4', text: 'provisions = wooden anchors  |  concealed = shouted loudly', icon: '⚓' }
+          ],
+          correct: 'a1',
+          hint: 'Look at Sign #1 (sharp rocks tearing a ship = dangerous) and List #2 (water, fruit, fish = food & supplies).'
+        },
+        partB: {
+          question: 'Part B (Context Completion): Choose the correct words to complete the village scroll: "We must ______ the secret map before packing our ______ for the voyage."',
+          options: [
+            { id: 'b1', text: 'conceal / treacherous', icon: '📦' },
+            { id: 'b2', text: 'decipher / provisions', icon: '📜' },
+            { id: 'b3', text: 'treacherous / decipher', icon: '⛵' }
+          ],
+          correct: 'b2',
+          hint: 'You solve/decode ("decipher") a secret map, and you pack food/water supplies ("provisions") for a trip!'
+        }
+      },
+      {
+        id: 3,
+        name: 'Island 3: The Ancient Temple',
+        shortName: 'Ancient Temple',
+        skill: 'Making Inferences & Main Ideas',
+        badgeName: 'Master Inferencers',
+        badgeIcon: '🏛️',
+        themeColor: '#7e22ce',
+        fragmentClue: 'TEMPLE CLUE: Always travel due NORTH from the Sun Pillar when shadows point west.',
+        intro: 'Golden sunbeams pierce the mossy roof of a forgotten stone temple. Four carved wall tablets tell pieces of an ancient mystery. Combine the evidence to uncover what happened!',
+        discussionPrompt: 'Put the four stone tablets together! Why did the temple builders leave in a hurry, and what was the main event?',
+        clues: [
+          {
+            roleIndex: 0,
+            cardTitle: 'North Wall Tablet',
+            passage: 'In the Year of the Golden Sun, thick grey ash began falling from Mount Ember. The sky turned dark at noon, and the temple bells rang nonstop to warn the villagers.',
+            keywords: ['thick grey ash', 'Mount Ember', 'sky turned dark'],
+            prompt: 'Read aloud! What natural disaster was starting near the temple?'
+          },
+          {
+            roleIndex: 1,
+            cardTitle: 'East Wall Tablet',
+            passage: 'Half-eaten bowls of rice and unlit clay lamps were left behind on the stone tables. No gold or pottery was broken, showing there was no battle or enemy attack.',
+            keywords: ['Half-eaten bowls', 'left behind', 'no battle'],
+            prompt: 'Point out the clues showing people left suddenly without fighting.'
+          },
+          {
+            roleIndex: 2,
+            cardTitle: 'South Wall Tablet',
+            passage: 'Stone carvings show families carrying small bundles and walking north toward the harbour boats. Beside the Sun Pillar, an arrow points due NORTH to safety.',
+            keywords: ['walking north', 'harbour boats', 'arrow points due NORTH'],
+            prompt: 'Infer where the temple people went and which direction their compass arrow marks.'
+          },
+          {
+            roleIndex: 3,
+            cardTitle: 'West Wall Tablet',
+            passage: 'Before boarding the last ship, the High Priest locked the sacred Star Map inside the Sun Pillar so future explorers could find the safe northern route.',
+            keywords: ['High Priest', 'locked the Star Map', 'safe northern route'],
+            prompt: 'Guide the team to agree on the Main Idea and the best inference.'
+          }
+        ],
+        partA: {
+          question: 'Part A (Main Idea): What is the MAIN IDEA of all four temple tablets combined?',
+          options: [
+            { id: 'a1', text: 'Pirates attacked the temple and stole all the villagers’ bowls.', icon: '⚔️' },
+            { id: 'a2', text: 'Villagers quickly evacuated north by boat when a volcano erupted, leaving behind clues.', icon: '🌋' },
+            { id: 'a3', text: 'The High Priest built a brand new temple on top of Mount Ember.', icon: '🏔️' },
+            { id: 'a4', text: 'The villagers forgot how to light their clay lamps at night.', icon: '🪔' }
+          ],
+          correct: 'a2',
+          hint: 'Combine North Tablet (volcanic ash from Mount Ember), East Tablet (left food in a hurry, no battle), and South Tablet (walked north to harbour boats).'
+        },
+        partB: {
+          question: 'Part B (Logical Inference): How do we know the villagers left in a sudden hurry rather than planning a slow holiday?',
+          options: [
+            { id: 'b1', text: 'Because they left half-eaten bowls of rice on the tables when ash began falling.', icon: '🍚' },
+            { id: 'b2', text: 'Because they took all their stone tables onto the harbour boats.', icon: '🛶' },
+            { id: 'b3', text: 'Because the Sun Pillar was painted bright blue.', icon: '🔵' }
+          ],
+          correct: 'b1',
+          hint: 'Check East Wall Tablet! People do not leave half-eaten meals behind unless they must escape immediately.'
+        }
+      },
+      {
+        id: 4,
+        name: 'Island 4: The Forgotten Beach',
+        shortName: 'Forgotten Beach',
+        skill: 'Sequencing Events & Cause/Effect',
+        badgeName: 'Timeline Navigators',
+        badgeIcon: '⏳',
+        themeColor: '#0369a1',
+        fragmentClue: 'BEACH CLUE: Cross the Coral Reef only at SUNRISE when the low tide reveals the stone bridge.',
+        intro: 'Waves wash over scattered driftwood and a salt-stained leather diary. Each explorer holds one torn diary page. Discuss the time words and causes/effects to put the story in order!',
+        discussionPrompt: 'Compare the time clues on each diary page (morning, afternoon, sunset, sunrise)! Which event happened 1st, 2nd, 3rd, and 4th?',
+        clues: [
+          {
+            roleIndex: 0,
+            cardTitle: 'Torn Page [Wave]',
+            passage: '<strong>Entry:</strong> At <strong>sunset</strong>, the ocean water finally dropped to low tide! Because the water was shallow, a hidden stone bridge appeared across the Coral Reef.',
+            keywords: ['sunset', 'dropped to low tide', 'hidden stone bridge appeared'],
+            prompt: 'Read aloud! Notice the time ("sunset") and what caused the stone bridge to appear.'
+          },
+          {
+            roleIndex: 1,
+            cardTitle: 'Torn Page [Anchor]',
+            passage: '<strong>Entry:</strong> Early in the <strong>morning</strong>, our rowboat landed on Forgotten Beach. The high tide was crashing wildly over the Coral Reef, blocking our way forward.',
+            keywords: ['Early in the morning', 'landed', 'high tide blocking'],
+            prompt: 'Spot when the explorers first arrived on the beach!'
+          },
+          {
+            roleIndex: 2,
+            cardTitle: 'Torn Page [Compass]',
+            passage: '<strong>Entry:</strong> The next day at <strong>sunrise</strong>, we walked safely across the dry stone bridge and tucked the fourth map fragment inside a giant clam shell.',
+            keywords: ['next day at sunrise', 'walked safely across', 'giant clam shell'],
+            prompt: 'Connect this with the sunset entry! What happened the next morning?'
+          },
+          {
+            roleIndex: 3,
+            cardTitle: 'Torn Page [Spyglass]',
+            passage: '<strong>Entry:</strong> By <strong>midday (afternoon)</strong>, we built a driftwood shelter on the sand and waited patiently for the high tide to go down.',
+            keywords: ['midday (afternoon)', 'built a driftwood shelter', 'waited patiently'],
+            prompt: 'Lead the team to arrange all 4 diary pages from 1st to 4th!'
+          }
+        ],
+        partA: {
+          question: 'Part A (Chronological Sequence): Which order shows the explorer’s diary from FIRST event (1) to LAST event (4)?',
+          options: [
+            { id: 'a1', text: '1. Morning landing → 2. Afternoon shelter → 3. Sunset low tide → 4. Sunrise bridge crossing', icon: '🌅' },
+            { id: 'a2', text: '1. Sunrise bridge crossing → 2. Sunset low tide → 3. Morning landing → 4. Afternoon shelter', icon: '🔄' },
+            { id: 'a3', text: '1. Afternoon shelter → 2. Morning landing → 3. Sunrise crossing → 4. Sunset low tide', icon: '🏖️' },
+            { id: 'a4', text: '1. Sunset low tide → 2. Morning landing → 3. Afternoon shelter → 4. Sunrise crossing', icon: '🌊' }
+          ],
+          correct: 'a1',
+          hint: 'Follow the clock clues: Early morning (Anchor) → Midday/afternoon (Spyglass) → Sunset (Wave) → Next day at sunrise (Compass).'
+        },
+        partB: {
+          question: 'Part B (Cause & Effect): WHY were the explorers able to cross the Coral Reef at sunrise?',
+          options: [
+            { id: 'b1', text: 'Because they built a tall wooden ship out of palm leaves.', icon: '🌴' },
+            { id: 'b2', text: 'Because low tide uncovered a hidden stone bridge across the reef.', icon: '🪨' },
+            { id: 'b3', text: 'Because giant sea turtles carried them across.', icon: '🐢' }
+          ],
+          correct: 'b2',
+          hint: 'Read Torn Page [Wave] again: What happened when the ocean dropped to low tide?'
+        }
+      },
+      {
+        id: 5,
+        name: "Island 5: The Dragon's Cave",
+        shortName: "Dragon's Cave",
+        skill: 'Comprehension, Evidence & Riddle Solving',
+        badgeName: 'Dragon Riddle Solvers',
+        badgeIcon: '🐉',
+        themeColor: '#be123c',
+        fragmentClue: 'DRAGON CLUE: Sing softly past the sleeping Ember Dragon to claim the Crown Key!',
+        intro: 'Glowing crystals light up the cavern of Ignis, the ancient Ember Dragon. Four guardian scrolls reveal the dragon’s secret and a 4-line riddle. Work together to solve it!',
+        discussionPrompt: 'Combine all four guardian scrolls! How does Ignis react to loud noise versus soft music, and what is the answer to the 4-line riddle?',
+        clues: [
+          {
+            roleIndex: 0,
+            cardTitle: 'Guardian Scroll 1',
+            passage: 'Ignis the Ember Dragon sleeps on a bed of glowing rubies. Loud footsteps or shouting wake him immediately, causing him to blow harmless smoke rings.',
+            keywords: ['sleeps on rubies', 'Loud footsteps wake him', 'smoke rings'],
+            prompt: 'Read aloud! Tell your teammates what wakes Ignis up.'
+          },
+          {
+            roleIndex: 1,
+            cardTitle: 'Guardian Scroll 2',
+            passage: 'However, humming a gentle lullaby keeps Ignis fast asleep! In his sleep, his tail curls away from the Crystal Archway on the left.',
+            keywords: ['gentle lullaby', 'fast asleep', 'Crystal Archway on the left'],
+            prompt: 'Highlight how explorers can keep Ignis asleep and which archway is safe.'
+          },
+          {
+            roleIndex: 2,
+            cardTitle: 'Guardian Scroll 3',
+            passage: 'Riddle Clue (Lines 1–2): "I have no voice, yet I tell old tales; I have no sails, yet I cross wide seas..."',
+            keywords: ['no voice', 'tell old tales', 'cross wide seas'],
+            prompt: 'Think carefully! What object has pages/stories and travels with explorers?'
+          },
+          {
+            roleIndex: 3,
+            cardTitle: 'Guardian Scroll 4',
+            passage: 'Riddle Clue (Lines 3–4): "...I show islands, reefs, and X marks the spot; unfold me flat to find the treasure plot!"',
+            keywords: ['show islands', 'X marks the spot', 'unfold me flat'],
+            prompt: 'Lead the final island discussion! Put Lines 1–4 together to solve the riddle.'
+          }
+        ],
+        partA: {
+          question: 'Part A (Textual Evidence): According to Scrolls 1 & 2, how should explorers pass Ignis safely?',
+          options: [
+            { id: 'a1', text: 'Run past loudly and shout to scare the dragon away.', icon: '📢' },
+            { id: 'a2', text: 'Hum a gentle lullaby quietly and walk through the Crystal Archway on the left.', icon: '🎶' },
+            { id: 'a3', text: 'Throw glowing rubies at the ceiling.', icon: '💎' },
+            { id: 'a4', text: 'Take the dark tunnel on the right while stomping their boots.', icon: '👢' }
+          ],
+          correct: 'a2',
+          hint: 'Scroll 1 says loud noises wake Ignis, while Scroll 2 says a gentle lullaby keeps him asleep so you can pass the Crystal Archway on the left.'
+        },
+        partB: {
+          question: 'Part B (Collaborative Riddle): Combine Scrolls 3 & 4! What am I? ("I tell old tales, show islands and reefs, and X marks the spot when you unfold me flat.")',
+          options: [
+            { id: 'b1', text: 'A Wooden Anchor', icon: '⚓' },
+            { id: 'b2', text: 'An Ancient Treasure Map', icon: '🗺️' },
+            { id: 'b3', text: 'A Sleeping Dragon', icon: '🐉' }
+          ],
+          correct: 'b2',
+          hint: 'Look at Scroll 4: "I show islands, reefs, and X marks the spot; unfold me flat..."'
+        }
+      }
+    ];
+
+    /* =========================================================================
+       3. GAME STATE & LOCALSTORAGE PERSISTENCE
+       ========================================================================= */
+    const DEFAULT_STATE = {
+      screen: 'intro', // 'intro' | 'setup' | 'map' | 'island' | 'final' | 'victory'
+      teamName: '',
+      players: ['', '', '', ''],
+      completedIslands: [], // [1, 2, ...]
+      islandScores: {}, // { 1: 200, ... }
+      badges: [], // [{ islandId, name, icon }]
+      score: 0,
+      finalCompleted: false,
+      activeIslandId: null,
+      // Temporary per-island collaboration state
+      openedClues: [false, false, false, false],
+      discussionChecks: [false, false, false],
+      partADone: false,
+      partBDone: false,
+      partAAttempts: 0,
+      partBAttempts: 0
+    };
+
+    let state = loadState();
+
+    function loadState() {
+      try {
+        const saved = localStorage.getItem('reading_quest_state_v1');
+        if (saved) {
+          return { ...DEFAULT_STATE, ...JSON.parse(saved) };
+        }
+      } catch (e) {}
+      return { ...DEFAULT_STATE };
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem('reading_quest_state_v1', JSON.stringify(state));
+      } catch (e) {}
+      updateHUD();
+    }
+
+    function resetGame() {
+      SoundFX.click();
+      localStorage.removeItem('reading_quest_state_v1');
+      state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+      closeModal();
+      render();
+      showToast('🧭 Quest reset! Ready for a new crew.');
+    }
+
+    /* Role rotation logic: rotates clockwise after each completed island */
+    function getPlayerForRole(roleIndex, islandId = 1) {
+      const rotationOffset = (islandId - 1) % 4;
+      const playerIndex = (roleIndex + rotationOffset) % 4;
+      return {
+        playerIndex,
+        playerName: state.players[playerIndex] || `Explorer ${playerIndex + 1}`,
+        role: ROLES[roleIndex]
+      };
+    }
+
+    /* =========================================================================
+       4. HUD & MODAL HELPERS
+       ========================================================================= */
+    function updateHUD() {
+      const hud = document.getElementById('game-hud');
+      if (state.screen === 'intro' || state.screen === 'setup') {
+        hud.classList.add('hidden');
+        return;
+      }
+      hud.classList.remove('hidden');
+      document.getElementById('hud-team-name').textContent = state.teamName || 'Sea Explorers';
+      const doneCount = state.completedIslands.length;
+      document.getElementById('hud-islands-done').textContent = `${doneCount} / 5`;
+      document.getElementById('hud-score').textContent = `${state.score} pts`;
+      document.getElementById('hud-badges-count').textContent = `${state.badges.length} 🏆`;
+      document.getElementById('hud-frag-count').textContent = `${doneCount}/5`;
+      document.getElementById('hud-frag-label').textContent = `${doneCount} of 5 Found`;
+
+      const wedgeColors = ['#22c55e', '#f59e0b', '#a855f7', '#0ea5e9', '#f43f5e'];
+      for (let i = 1; i <= 5; i++) {
+        const el = document.getElementById(`frag-wedge-${i}`);
+        if (el) {
+          el.setAttribute('fill', state.completedIslands.includes(i) ? wedgeColors[i - 1] : '#334155');
+        }
+      }
+    }
+
+    function openModal(htmlContent) {
+      const backdrop = document.getElementById('modal-backdrop');
+      const box = document.getElementById('modal-box');
+      box.innerHTML = htmlContent;
+      backdrop.classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('modal-backdrop').classList.add('hidden');
+    }
+
+    function confirmResetModal() {
+      SoundFX.click();
+      openModal(`
+        <div class="text-center space-y-4">
+          <div class="text-5xl">⚠️</div>
+          <h3 class="font-pirate text-2xl font-bold text-amber-950">Restart Entire Quest?</h3>
+          <p class="text-stone-700 font-semibold">This will clear your team's collected map fragments, badges, and points so a new team can play.</p>
+          <div class="flex justify-center gap-3 pt-2">
+            <button onclick="closeModal()" class="px-5 py-2.5 rounded-xl bg-stone-300 hover:bg-stone-400 font-bold text-stone-900">Keep Playing</button>
+            <button onclick="resetGame()" class="px-5 py-2.5 rounded-xl bg-rose-600 hover:bg-rose-700 font-bold text-white shadow-lg">Yes, Reset Quest</button>
+          </div>
+        </div>
+      `);
+    }
+
+    function openRosterModal() {
+      SoundFX.click();
+      const currentIsland = state.activeIslandId || Math.min(state.completedIslands.length + 1, 5);
+      const assignments = ROLES.map((r, idx) => {
+        const info = getPlayerForRole(idx, currentIsland);
+        return `
+          <div class="p-3 rounded-xl border-2 ${r.color} flex items-start gap-3">
+            <div class="text-3xl">${r.icon}</div>
+            <div>
+              <div class="text-xs font-extrabold uppercase tracking-wider opacity-80">${r.title}</div>
+              <div class="font-display text-lg font-bold">${escapeHTML(info.playerName)}</div>
+              <div class="text-xs mt-0.5 leading-snug">${r.duty}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const badgesHTML = state.badges.length
+        ? state.badges.map(b => `<span class="inline-flex items-center gap-1.5 bg-amber-200 border border-amber-500 text-amber-950 px-3 py-1 rounded-full text-xs font-extrabold">${b.icon} ${b.name}</span>`).join('')
+        : `<span class="text-xs italic text-stone-600">Complete islands to earn teamwork badges!</span>`;
+
+      openModal(`
+        <div class="space-y-4">
+          <div class="flex items-center justify-between border-b-2 border-amber-700/30 pb-2">
+            <h3 class="font-pirate text-xl sm:text-2xl font-bold text-amber-950">Crew Roles (Island ${currentIsland} Rotation)</h3>
+            <button onclick="closeModal()" class="text-stone-600 hover:text-stone-950 text-2xl font-bold px-2">&times;</button>
+          </div>
+          <p class="text-xs sm:text-sm text-stone-700 font-semibold">Roles rotate automatically on every island so every explorer practises reading, hunting clues, thinking, and leading!</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">${assignments}</div>
+          <div class="parchment-inner p-3">
+            <div class="text-xs font-extrabold uppercase text-amber-900 mb-2">Teamwork Badges Earned (${state.badges.length}/5)</div>
+            <div class="flex flex-wrap gap-2">${badgesHTML}</div>
+          </div>
+          <div class="text-right">
+            <button onclick="closeModal()" class="btn-pirate px-6 py-2 rounded-xl text-sm">Back to Adventure</button>
+          </div>
+        </div>
+      `);
+    }
+
+    function escapeHTML(str) {
+      return String(str || '').replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+    }
+
+    /* =========================================================================
+       5. SCREEN RENDERERS
+       ========================================================================= */
+    function render() {
+      updateHUD();
+      const container = document.getElementById('screen-container');
+      switch (state.screen) {
+        case 'intro': renderIntroScreen(container); break;
+        case 'setup': renderSetupScreen(container); break;
+        case 'map': renderMapScreen(container); break;
+        case 'island': renderIslandScreen(container); break;
+        case 'final': renderFinalChallengeScreen(container); break;
+        case 'victory': renderVictoryScreen(container); break;
+        default: renderIntroScreen(container);
+      }
+    }
+
+    /* -------------------------------------------------------------------------
+       SCREEN 1: ANIMATED OPENING SCENE
+       ------------------------------------------------------------------------- */
+    function renderIntroScreen(container) {
+      container.innerHTML = `
+        <div class="parchment-card overflow-hidden p-4 sm:p-8 anim-pop">
+          <!-- Illustrated Storybook Sky & Ocean Banner -->
+          <div class="relative rounded-2xl overflow-hidden border-4 border-amber-800 shadow-inner bg-gradient-to-b from-sky-300 via-amber-100 to-cyan-700 h-64 sm:h-80">
+            <svg viewBox="0 0 1000 340" preserveAspectRatio="xMidYMid slice" class="w-full h-full">
+              <defs>
+                <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#38bdf8"/>
+                  <stop offset="65%" stop-color="#fde68a"/>
+                  <stop offset="100%" stop-color="#fb923c"/>
+                </linearGradient>
+                <radialGradient id="sunGlow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#fef08a" stop-opacity="1"/>
+                  <stop offset="70%" stop-color="#f59e0b" stop-opacity="0.4"/>
+                  <stop offset="100%" stop-color="#f59e0b" stop-opacity="0"/>
+                </radialGradient>
+              </defs>
+              <!-- Sky & Sun -->
+              <rect width="1000" height="230" fill="url(#skyGrad)"/>
+              <circle cx="500" cy="145" r="110" fill="url(#sunGlow)"/>
+              <circle cx="500" cy="145" r="46" fill="#fef9c3"/>
+
+              <!-- Drifting Clouds -->
+              <g class="anim-cloud" fill="#ffffff" opacity="0.85">
+                <ellipse cx="170" cy="65" rx="52" ry="18"/>
+                <ellipse cx="205" cy="58" rx="38" ry="20"/>
+                <ellipse cx="780" cy="75" rx="60" ry="18"/>
+                <ellipse cx="820" cy="68" rx="40" ry="22"/>
+              </g>
+
+              <!-- Distant Mysterious Island Silhouette -->
+              <path d="M680,220 Q730,130 790,155 Q845,105 905,175 Q945,190 970,220 Z" fill="#1e3a5f"/>
+              <!-- Palm silhouettes -->
+              <path d="M745,165 Q740,135 732,122 M732,122 Q715,125 708,136 M732,122 Q725,108 712,112 M732,122 Q748,112 756,124" stroke="#0f172a" stroke-width="4" fill="none" stroke-linecap="round"/>
+
+              <!-- Ocean Waves -->
+              <rect y="215" width="1000" height="125" fill="#0369a1"/>
+              <path class="anim-wave" d="M-40,235 Q60,220 160,235 T360,235 T560,235 T760,235 T960,235 T1160,235 L1160,340 L-40,340 Z" fill="#0284c7"/>
+
+              <!-- Sailing Pirate Ship -->
+              <g class="anim-ship" transform="translate(210, 120)">
+                <!-- Hull -->
+                <path d="M20,100 L175,100 L150,136 L45,136 Z" fill="#5c2d16" stroke="#2d1404" stroke-width="3"/>
+                <path d="M12,92 L185,92 L175,103 L20,103 Z" fill="#92400e"/>
+                <!-- Portholes -->
+                <circle cx="65" cy="116" r="5" fill="#fef08a"/>
+                <circle cx="95" cy="116" r="5" fill="#fef08a"/>
+                <circle cx="125" cy="116" r="5" fill="#fef08a"/>
+                <!-- Masts -->
+                <rect x="75" y="18" width="6" height="76" fill="#3d1e0d"/>
+                <rect x="128" y="34" width="5" height="60" fill="#3d1e0d"/>
+                <!-- Main Sail -->
+                <path d="M81,24 Q122,52 81,84 Q96,52 81,24 Z" fill="#fffbeb" stroke="#d97706" stroke-width="2"/>
+                <path d="M35,30 Q75,55 35,84 L75,84 L75,30 Z" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+                <!-- Flag -->
+                <polygon points="78,10 106,16 78,22" fill="#dc2626"/>
+              </g>
+
+              <!-- Foreground Sandy Spit + Glowing Treasure Chest + Ancient Map Scroll -->
+              <path d="M0,295 Q260,255 540,295 Q800,265 1000,290 L1000,340 L0,340 Z" fill="#eab308"/>
+              <path d="M0,308 Q300,275 620,312 Q840,285 1000,305 L1000,340 L0,340 Z" fill="#ca8a04"/>
+
+              <!-- Glowing Treasure Chest -->
+              <g class="anim-glow" transform="translate(790, 238)">
+                <rect x="10" y="24" width="84" height="46" rx="6" fill="#78350f" stroke="#fef08a" stroke-width="3"/>
+                <path d="M10,26 Q52,4 94,26 Z" fill="#92400e" stroke="#fef08a" stroke-width="3"/>
+                <rect x="44" y="20" width="16" height="22" rx="3" fill="#fbbf24" stroke="#451a03" stroke-width="2"/>
+                <circle cx="52" cy="30" r="3" fill="#451a03"/>
+              </g>
+
+              <!-- Unrolled Ancient Scroll -->
+              <g transform="translate(560, 255)">
+                <rect x="12" y="6" width="110" height="44" rx="4" fill="#fef3c7" stroke="#92400e" stroke-width="2.5"/>
+                <rect x="4" y="2" width="12" height="52" rx="5" fill="#d97706" stroke="#78350f" stroke-width="2"/>
+                <rect x="118" y="2" width="12" height="52" rx="5" fill="#d97706" stroke="#78350f" stroke-width="2"/>
+                <path d="M28,28 Q52,16 74,30 T104,22" stroke="#b45309" stroke-width="2.5" stroke-dasharray="4,3" fill="none"/>
+                <text x="98" y="27" fill="#dc2626" font-weight="900" font-size="15">X</text>
+              </g>
+            </svg>
+
+            <!-- Title Overlay -->
+            <div class="absolute inset-0 flex flex-col items-center justify-start pt-4 sm:pt-6 px-4 text-center pointer-events-none">
+              <span class="bg-amber-950/85 text-amber-300 border border-amber-400 px-3.5 py-1 rounded-full text-xs sm:text-sm font-extrabold uppercase tracking-widest shadow">
+                Year 6 Collaborative Reading Adventure
+              </span>
+              <h1 class="font-pirate text-2xl sm:text-4xl md:text-5xl font-black text-amber-950 drop-shadow-[0_2px_0_rgba(255,255,255,0.9)] mt-2">
+                READING QUEST: THE LOST TREASURE
+              </h1>
+            </div>
+          </div>
+
+          <!-- Storyline & Call to Action -->
+          <div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-5 items-center">
+            <div class="lg:col-span-2 parchment-inner p-5 space-y-3">
+              <div class="flex items-center gap-2 text-amber-900 font-display font-bold text-lg sm:text-xl">
+                <span>🗺️</span>
+                <span>The Legend of the Five Lost Fragments</span>
+              </div>
+              <p class="text-stone-800 text-sm sm:text-base leading-relaxed font-semibold">
+                Ahoy, young explorers! Your crew has discovered an ancient pirate map leading to a legendary lost treasure hidden across <strong class="text-amber-900">five mysterious islands</strong>.
+              </p>
+              <p class="text-stone-800 text-sm sm:text-base leading-relaxed font-semibold">
+                However, the map is torn into five secret fragments! Each explorer on your 4-player team will receive <strong class="text-emerald-800">different secret clues</strong>. You must read carefully, share what you find aloud, discuss your ideas together, and unlock all five fragments before you can open the final treasure chest!
+              </p>
+              <div class="flex flex-wrap gap-2 pt-1 text-xs font-extrabold">
+                <span class="bg-amber-200/90 text-amber-950 px-3 py-1 rounded-lg border border-amber-400">👥 4 Players • 1 Shared Screen</span>
+                <span class="bg-emerald-200/90 text-emerald-950 px-3 py-1 rounded-lg border border-emerald-400">📖 Read • Speak • Listen • Decide</span>
+                <span class="bg-sky-200/90 text-sky-950 px-3 py-1 rounded-lg border border-sky-400">🏆 Printable Team Certificate</span>
+              </div>
+            </div>
+
+            <div class="flex flex-col items-center justify-center text-center p-4 bg-amber-950/10 rounded-2xl border-2 border-amber-700/30 space-y-4">
+              <div class="text-5xl animate-bounce">🏴‍☠️</div>
+              <p class="font-display font-bold text-amber-950 text-base">Gather your 4 explorers around the screen!</p>
+              <button onclick="goToSetup()" class="btn-pirate w-full py-4 px-6 rounded-2xl text-lg sm:text-xl uppercase tracking-wide cursor-pointer">
+                START YOUR QUEST ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function goToSetup() {
+      SoundFX.fanfare();
+      state.screen = 'setup';
+      saveState();
+      render();
+    }
+
+    /* -------------------------------------------------------------------------
+       SCREEN 2: TEAM SETUP & 4 ROTATING ROLES EXPLANATION
+       ------------------------------------------------------------------------- */
+    function renderSetupScreen(container) {
+      const defaultNames = ['Aisyah', 'Daniel', 'Mei Ling', 'Arjun'];
+      container.innerHTML = `
+        <div class="parchment-card p-5 sm:p-8 anim-pop space-y-6">
+          <div class="text-center max-w-2xl mx-auto">
+            <span class="text-xs font-extrabold uppercase tracking-widest text-amber-800 bg-amber-200 px-3 py-1 rounded-full">Crew Registration</span>
+            <h2 class="font-pirate text-2xl sm:text-4xl font-bold text-amber-950 mt-2">Assemble Your 4-Explorer Crew</h2>
+            <p class="text-stone-700 text-sm sm:text-base font-semibold mt-1">
+              Enter your Team Name and all 4 explorers' names. Every explorer will receive a <strong>different secret clue card</strong> on each island, and roles will <strong>rotate automatically</strong> after every mission!
+            </p>
+          </div>
+
+          <form onsubmit="handleTeamSubmit(event)" class="space-y-6">
+            <!-- Team Name -->
+            <div class="max-w-md mx-auto">
+              <label class="block text-sm font-extrabold uppercase tracking-wide text-amber-950 mb-1.5">🏴‍☠️ Crew / Team Name</label>
+              <input id="input-team-name" type="text" required maxlength="28"
+                value="${escapeHTML(state.teamName)}"
+                placeholder="e.g., Golden Compass Crew"
+                class="w-full px-4 py-3 rounded-xl border-3 border-amber-700 bg-white font-display font-bold text-lg text-amber-950 focus:outline-none focus:ring-4 focus:ring-amber-400" />
+            </div>
+
+            <!-- 4 Player Inputs + Role Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              ${ROLES.map((role, idx) => `
+                <div class="p-4 rounded-2xl border-2 ${role.color} shadow-sm flex flex-col justify-between space-y-3">
+                  <div>
+                    <div class="flex items-center justify-between">
+                      <span class="text-3xl">${role.icon}</span>
+                      <span class="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full ${role.badgeBg}">Island 1 Role</span>
+                    </div>
+                    <h3 class="font-display font-bold text-base mt-2">${role.title}</h3>
+                    <p class="text-xs font-semibold opacity-90 mt-1 leading-relaxed">${role.duty}</p>
+                  </div>
+                  <div>
+                    <label class="block text-[11px] font-extrabold uppercase mb-1">Explorer ${idx + 1} Name</label>
+                    <input id="input-player-${idx}" type="text" required maxlength="18"
+                      value="${escapeHTML(state.players[idx] || '')}"
+                      placeholder="e.g., ${defaultNames[idx]}"
+                      class="w-full px-3 py-2 rounded-xl border-2 border-stone-400 bg-white font-bold text-sm text-stone-900 focus:outline-none focus:border-amber-700" />
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+
+            <!-- Pass-the-Device Note -->
+            <div class="parchment-inner p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <span class="text-3xl">🤝</span>
+                <div class="text-xs sm:text-sm font-semibold text-stone-800">
+                  <strong class="text-amber-950">How Pass-the-Device Works:</strong> When an explorer taps their Secret Clue Card, teammates look away while they read it. Then everyone speaks, shares clues, and agrees before the Team Captain submits!
+                </div>
+              </div>
+              <div class="flex gap-2 shrink-0">
+                <button type="button" onclick="fillSampleCrew()" class="px-4 py-2.5 rounded-xl bg-amber-200 hover:bg-amber-300 border border-amber-600 text-amber-950 text-xs font-extrabold">
+                  Fill Sample Names
+                </button>
+                <button type="submit" class="btn-pirate px-6 py-3 rounded-xl text-base">
+                  Set Sail to Map ⛵
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      `;
+    }
+
+    function fillSampleCrew() {
+      SoundFX.click();
+      document.getElementById('input-team-name').value = 'Crimson Tide Explorers';
+      ['Aisyah', 'Daniel', 'Mei Ling', 'Arjun'].forEach((n, i) => {
+        document.getElementById(`input-player-${i}`).value = n;
+      });
+    }
+
+    function handleTeamSubmit(e) {
+      e.preventDefault();
+      SoundFX.fanfare();
+      state.teamName = document.getElementById('input-team-name').value.trim() || 'Sea Explorers';
+      state.players = [0, 1, 2, 3].map(i => document.getElementById(`input-player-${i}`).value.trim() || `Explorer ${i + 1}`);
+      state.screen = 'map';
+      saveState();
+      render();
+    }
+
+    /* -------------------------------------------------------------------------
+       SCREEN 3: INTERACTIVE ARCHIPELAGO ADVENTURE MAP
+       ------------------------------------------------------------------------- */
+    function goToMap() {
+      SoundFX.click();
+      state.screen = 'map';
+      state.activeIslandId = null;
+      saveState();
+      render();
+    }
+
+    function renderMapScreen(container) {
+      const allFiveDone = state.completedIslands.length === 5;
+      const nextIslandId = Math.min(state.completedIslands.length + 1, 5);
+
+      // Coordinates on 1000x520 SVG map
+      const islandNodes = [
+        { id: 1, x: 145, y: 375, icon: '🌴', label: '1. Mysterious Jungle', sub: 'Scanning & Details' },
+        { id: 2, x: 310, y: 165, icon: '⚓', label: "2. Pirate's Village", sub: 'Vocabulary in Context' },
+        { id: 3, x: 525, y: 365, icon: '🏛️', label: '3. Ancient Temple', sub: 'Main Idea & Inference' },
+        { id: 4, x: 705, y: 155, icon: '🏖️', label: '4. Forgotten Beach', sub: 'Sequencing Events' },
+        { id: 5, x: 865, y: 355, icon: '🐉', label: "5. Dragon's Cave", sub: 'Evidence & Riddle' }
+      ];
+
+      container.innerHTML = `
+        <div class="parchment-card p-4 sm:p-6 anim-pop space-y-4">
+          <!-- Map Header -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b-2 border-amber-700/30 pb-3">
+            <div>
+              <h2 class="font-pirate text-xl sm:text-3xl font-bold text-amber-950">The Archipelago of Lost Clues</h2>
+              <p class="text-xs sm:text-sm text-stone-700 font-semibold">
+                ${allFiveDone
+                  ? '🎉 All 5 Map Fragments collected! Enter the Golden Treasure Vault in the center!'
+                  : `Select an unlocked island to begin! Next recommended mission: <strong class="text-amber-900">Island ${nextIslandId}</strong>.`}
+              </p>
+            </div>
+            ${allFiveDone ? `
+              <button onclick="startFinalChallenge()" class="btn-emerald px-5 py-3 rounded-2xl text-sm sm:text-base anim-glow flex items-center gap-2">
+                <span>👑</span><span>ENTER FINAL TREASURE VAULT!</span>
+              </button>
+            ` : `
+              <div class="bg-amber-100 border border-amber-500 px-3.5 py-2 rounded-xl text-xs font-extrabold text-amber-950">
+                🔓 ${5 - state.completedIslands.length} Fragment${5 - state.completedIslands.length === 1 ? '' : 's'} Left to Unlock Final Vault
+              </div>
+            `}
+          </div>
+
+          <!-- Interactive SVG Sea Chart -->
+          <div class="relative rounded-2xl overflow-hidden border-4 border-amber-800 bg-[#0c4a6e] shadow-inner">
+            <svg viewBox="0 0 1000 500" class="w-full h-auto block">
+              <defs>
+                <radialGradient id="seaGrad" cx="50%" cy="50%" r="65%">
+                  <stop offset="0%" stop-color="#0ea5e9"/>
+                  <stop offset="65%" stop-color="#0369a1"/>
+                  <stop offset="100%" stop-color="#082f49"/>
+                </radialGradient>
+              </defs>
+              <rect width="1000" height="500" fill="url(#seaGrad)"/>
+
+              <!-- Subtle Nautical Grid Lines -->
+              <g stroke="#bae6fd" stroke-opacity="0.14" stroke-width="1">
+                <line x1="0" y1="125" x2="1000" y2="125"/>
+                <line x1="0" y1="250" x2="1000" y2="250"/>
+                <line x1="0" y1="375" x2="1000" y2="375"/>
+                <line x1="250" y1="0" x2="250" y2="500"/>
+                <line x1="500" y1="0" x2="500" y2="500"/>
+                <line x1="750" y1="0" x2="750" y2="500"/>
+              </g>
+
+              <!-- Decorative Compass Rose (Bottom Left) -->
+              <g transform="translate(82, 82)" opacity="0.55">
+                <circle r="44" fill="none" stroke="#fef08a" stroke-width="2" stroke-dasharray="4,3"/>
+                <polygon points="0,-42 9,-9 42,0 9,9 0,42 -9,9 -42,0 -9,-9" fill="#fde047"/>
+                <text y="-47" text-anchor="middle" fill="#fef9c3" font-size="13" font-weight="bold">N</text>
+              </g>
+
+              <!-- Dotted Sea Routes -->
+              <path d="M145,375 Q210,250 310,165 T525,365 T705,155 T865,355"
+                fill="none" stroke="#fef08a" stroke-width="5" stroke-dasharray="12,10" stroke-linecap="round" opacity="0.85"/>
+              <!-- Route to Final Vault -->
+              <path d="M865,355 Q680,275 505,220"
+                fill="none" stroke="${allFiveDone ? '#34d399' : '#94a3b8'}" stroke-width="5" stroke-dasharray="10,8" stroke-linecap="round"/>
+
+              <!-- CENTRAL FINAL TREASURE VAULT NODE -->
+              <g transform="translate(505, 210)"
+                 class="${allFiveDone ? 'cursor-pointer' : 'cursor-not-allowed opacity-75'}"
+                 onclick="${allFiveDone ? 'startFinalChallenge()' : "showToast('🔒 Collect all 5 island fragments first!')"}">
+                <circle r="54" fill="${allFiveDone ? '#065f46' : '#1e293b'}" stroke="${allFiveDone ? '#fbbf24' : '#64748b'}" stroke-width="5"/>
+                <circle r="44" fill="${allFiveDone ? '#047857' : '#334155'}" stroke="#fef08a" stroke-width="2" stroke-dasharray="5,3"/>
+                <text y="-4" text-anchor="middle" font-size="30">${allFiveDone ? '👑' : '🔒'}</text>
+                <rect x="-78" y="34" width="156" height="32" rx="10" fill="${allFiveDone ? '#fbbf24' : '#334155'}" stroke="#451a03" stroke-width="2"/>
+                <text y="54" text-anchor="middle" fill="${allFiveDone ? '#2d1404' : '#e2e8f0'}" font-size="12" font-weight="900">
+                  ${allFiveDone ? 'FINAL TREASURE VAULT' : 'LOCKED VAULT (5 FRAGS)'}
+                </text>
+              </g>
+
+              <!-- 5 ISLAND NODES -->
+              ${islandNodes.map(node => {
+                const isDone = state.completedIslands.includes(node.id);
+                // Unlock sequentially (Island 1 always unlocked, Island N unlocked when N-1 is done)
+                const isUnlocked = node.id === 1 || state.completedIslands.includes(node.id - 1) || isDone;
+                const isCurrent = isUnlocked && !isDone;
+                return `
+                  <g transform="translate(${node.x}, ${node.y})"
+                     class="${isUnlocked ? 'cursor-pointer' : 'cursor-not-allowed opacity-70'}"
+                     onclick="${isUnlocked ? `startIsland(${node.id})` : `showToast('🔒 Complete Island ${node.id - 1} first to unlock this route!')`}">
+                    <!-- Island Sand & Lush Hill -->
+                    <ellipse cx="0" cy="18" rx="68" ry="30" fill="#eab308" stroke="#854d0e" stroke-width="3"/>
+                    <ellipse cx="0" cy="10" rx="54" ry="22" fill="${isDone ? '#16a34a' : (isUnlocked ? '#22c55e' : '#475569')}"/>
+                    ${isCurrent ? `<circle r="52" fill="none" stroke="#fde047" stroke-width="4" stroke-dasharray="10,6" class="anim-spin-slow"/>` : ''}
+                    <!-- Icon Badge -->
+                    <circle cy="-14" r="28" fill="#fffbeb" stroke="${isDone ? '#15803d' : '#92400e'}" stroke-width="4"/>
+                    <text y="-4" text-anchor="middle" font-size="28">${isUnlocked ? node.icon : '🔒'}</text>
+                    <!-- Status Pill -->
+                    ${isDone ? `
+                      <g transform="translate(26, -34)">
+                        <circle r="14" fill="#16a34a" stroke="#fff" stroke-width="2.5"/>
+                        <text y="5" text-anchor="middle" fill="#fff" font-size="14" font-weight="bold">✓</text>
+                      </g>
+                    ` : ''}
+                    <!-- Label Box -->
+                    <rect x="-86" y="34" width="172" height="42" rx="10" fill="#fffbeb" stroke="#78350f" stroke-width="2.5"/>
+                    <text y="52" text-anchor="middle" fill="#451a03" font-size="12.5" font-weight="900">${node.label}</text>
+                    <text y="68" text-anchor="middle" fill="#92400e" font-size="10.5" font-weight="700">${isDone ? 'Fragment Collected!' : node.sub}</text>
+                  </g>
+                `;
+              }).join('')}
+            </svg>
+          </div>
+
+          <!-- Quick Island Cards Strip for Easy Tablet Tapping -->
+          <div class="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
+            ${ISLANDS.map(isl => {
+              const isDone = state.completedIslands.includes(isl.id);
+              const isUnlocked = isl.id === 1 || state.completedIslands.includes(isl.id - 1) || isDone;
+              return `
+                <button
+                  onclick="${isUnlocked ? `startIsland(${isl.id})` : `showToast('🔒 Complete Island ${isl.id - 1} first!')`}"
+                  class="p-3 rounded-xl border-2 text-left transition flex flex-col justify-between ${
+                    isDone
+                      ? 'bg-emerald-100 border-emerald-600 text-emerald-950'
+                      : isUnlocked
+                        ? 'bg-amber-100 hover:bg-amber-200 border-amber-600 text-amber-950 shadow'
+                        : 'bg-stone-200/70 border-stone-400 text-stone-500 opacity-75'
+                  }">
+                  <div class="flex items-center justify-between text-xs font-extrabold">
+                    <span>ISLAND ${isl.id}</span>
+                    <span>${isDone ? '✅' : isUnlocked ? '⛵' : '🔒'}</span>
+                  </div>
+                  <div class="font-display font-bold text-sm mt-1 leading-tight">${isl.shortName}</div>
+                  <div class="text-[11px] font-semibold opacity-80 mt-0.5">${isl.skill}</div>
+                </button>
+              `;
+            }).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    /* -------------------------------------------------------------------------
+       SCREEN 4: COLLABORATIVE ISLAND MISSION (PASS-THE-DEVICE + DISCUSSION GATE)
+       ------------------------------------------------------------------------- */
+    function startIsland(islandId) {
+      SoundFX.pageFlip();
+      state.screen = 'island';
+      state.activeIslandId = islandId;
+      // Reset per-visit collaborative gates unless already completed (allow replay review)
+      state.openedClues = [false, false, false, false];
+      state.discussionChecks = [false, false, false];
+      state.partADone = false;
+      state.partBDone = false;
+      state.partAAttempts = 0;
+      state.partBAttempts = 0;
+      saveState();
+      render();
+    }
+
+    function renderIslandScreen(container) {
+      const island = ISLANDS.find(i => i.id === state.activeIslandId) || ISLANDS[0];
+      const allCluesOpened = state.openedClues.every(Boolean);
+      const allDiscussionChecked = state.discussionChecks.every(Boolean);
+      const challengeUnlocked = allCluesOpened && allDiscussionChecked;
+      const captainInfo = getPlayerForRole(3, island.id); // Role index 3 is Team Captain
+
+      container.innerHTML = `
+        <div class="parchment-card p-4 sm:p-7 anim-pop space-y-6">
+          <!-- Top Mission Banner -->
+          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b-2 border-amber-800/30 pb-4">
+            <div>
+              <div class="flex flex-wrap items-center gap-2">
+                <button onclick="goToMap()" class="text-xs font-extrabold bg-amber-900 text-amber-100 px-3 py-1 rounded-lg hover:bg-amber-800">← Map</button>
+                <span class="text-xs font-extrabold uppercase tracking-wider px-3 py-1 rounded-full bg-amber-200 text-amber-950 border border-amber-500">
+                  Focus: ${island.skill}
+                </span>
+              </div>
+              <h2 class="font-pirate text-2xl sm:text-3xl font-bold text-amber-950 mt-2">${island.name}</h2>
+              <p class="text-stone-800 text-sm sm:text-base font-semibold mt-1">${island.intro}</p>
+            </div>
+
+            <!-- Rotated Role Strip -->
+            <div class="bg-amber-950/10 p-3 rounded-2xl border border-amber-700/30 shrink-0">
+              <div class="text-[11px] font-extrabold uppercase text-amber-900 mb-1.5">🔄 Island ${island.id} Role Rotation</div>
+              <div class="grid grid-cols-2 gap-1.5 text-xs">
+                ${ROLES.map((r, rIdx) => {
+                  const p = getPlayerForRole(rIdx, island.id);
+                  return `
+                    <div class="bg-white/80 px-2.5 py-1 rounded-lg border border-amber-400 flex items-center gap-1.5">
+                      <span>${r.icon}</span>
+                      <div class="truncate">
+                        <div class="font-extrabold text-[10px] text-amber-900 leading-none">${r.title.replace('THE ', '')}</div>
+                        <div class="font-bold text-stone-900 truncate">${escapeHTML(p.playerName)}</div>
+                      </div>
+                    </div>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 1: SECRET INDIVIDUAL CLUE CARDS (PASS-THE-DEVICE MECHANIC) -->
+          <section class="space-y-3">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <h3 class="font-display text-lg sm:text-xl font-bold text-amber-950 flex items-center gap-2">
+                <span class="bg-amber-800 text-white w-7 h-7 rounded-full inline-flex items-center justify-center text-sm">1</span>
+                <span>Secret Clue Envelopes (Pass-the-Device)</span>
+              </h3>
+              <span class="text-xs font-extrabold text-amber-900 bg-amber-200/80 px-3 py-1 rounded-full">
+                Opened: ${state.openedClues.filter(Boolean).length} / 4 Explorers
+              </span>
+            </div>
+            <p class="text-xs sm:text-sm text-stone-700 font-semibold">
+              Tap <strong>your own name's envelope</strong> while teammates look away! Read your clue carefully, then close it and explain what you discovered to your team.
+            </p>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+              ${island.clues.map((clue, idx) => {
+                const pInfo = getPlayerForRole(clue.roleIndex, island.id);
+                const opened = state.openedClues[idx];
+                return `
+                  <div class="rounded-2xl border-3 p-4 transition flex flex-col justify-between space-y-3 ${
+                    opened
+                      ? 'bg-emerald-50 border-emerald-600 shadow-md'
+                      : 'bg-amber-100/90 border-amber-700 shadow-lg'
+                  }">
+                    <div>
+                      <div class="flex items-center justify-between">
+                        <span class="text-2xl">${pInfo.role.icon}</span>
+                        <span class="text-[11px] font-extrabold px-2 py-0.5 rounded-full ${opened ? 'bg-emerald-600 text-white' : 'bg-amber-800 text-amber-100'}">
+                          ${opened ? '✓ Read' : '🔒 Secret'}
+                        </span>
+                      </div>
+                      <div class="mt-2">
+                        <div class="text-[11px] font-extrabold uppercase text-amber-900">${pInfo.role.title}</div>
+                        <div class="font-display text-lg font-bold text-stone-900">${escapeHTML(pInfo.playerName)}</div>
+                      </div>
+                      <p class="text-xs text-stone-700 font-semibold mt-1">${clue.cardTitle}</p>
+                    </div>
+
+                    <button onclick="openSecretClueModal(${idx})" class="${opened ? 'btn-emerald' : 'btn-pirate'} w-full py-2.5 px-3 rounded-xl text-xs sm:text-sm">
+                      ${opened ? '👁️ Re-read My Clue' : `📜 Open ${escapeHTML(pInfo.playerName)}'s Clue`}
+                    </button>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </section>
+
+          <!-- STEP 2: MANDATORY TEAM DISCUSSION GATE -->
+          <section class="parchment-inner p-4 sm:p-5 space-y-3 ${!allCluesOpened ? 'opacity-65' : ''}">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h3 class="font-display text-lg sm:text-xl font-bold text-amber-950 flex items-center gap-2">
+                <span class="bg-amber-800 text-white w-7 h-7 rounded-full inline-flex items-center justify-center text-sm">2</span>
+                <span>Team Discussion Gate (Led by ${escapeHTML(captainInfo.playerName)})</span>
+              </h3>
+              ${!allCluesOpened ? `<span class="text-xs font-extrabold text-rose-800 bg-rose-100 px-3 py-1 rounded-full">Open all 4 clue cards first!</span>` : ''}
+            </div>
+
+            <div class="bg-amber-200/70 border-l-4 border-amber-700 p-3 rounded-r-xl text-sm font-bold text-amber-950">
+              💬 "${island.discussionPrompt}"
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5 pt-1">
+              ${[
+                'All 4 explorers shared their secret clue aloud',
+                'The Clue Hunter & Thinker connected our evidence',
+                'Everyone agrees before the Captain submits'
+              ].map((label, cIdx) => `
+                <label class="flex items-center gap-2.5 bg-white/90 p-3 rounded-xl border-2 ${state.discussionChecks[cIdx] ? 'border-emerald-600 bg-emerald-50' : 'border-amber-400'} cursor-pointer">
+                  <input type="checkbox"
+                    ${!allCluesOpened ? 'disabled' : ''}
+                    ${state.discussionChecks[cIdx] ? 'checked' : ''}
+                    onchange="toggleDiscussionCheck(${cIdx})"
+                    class="w-5 h-5 accent-emerald-600 rounded cursor-pointer" />
+                  <span class="text-xs sm:text-sm font-bold text-stone-800">${label}</span>
+                </label>
+              `).join('')}
+            </div>
+          </section>
+
+          <!-- STEP 3: COLLECTIVE ISLAND CHALLENGES (PART A & PART B) -->
+          <section class="space-y-4">
+            <h3 class="font-display text-lg sm:text-xl font-bold text-amber-950 flex items-center gap-2">
+              <span class="bg-amber-800 text-white w-7 h-7 rounded-full inline-flex items-center justify-center text-sm">3</span>
+              <span>Collective Island Challenges</span>
+            </h3>
+
+            ${!challengeUnlocked ? `
+              <div class="bg-stone-900/10 border-2 border-dashed border-amber-800/50 rounded-2xl p-6 text-center space-y-2">
+                <div class="text-4xl">🔐</div>
+                <div class="font-display font-bold text-lg text-amber-950">Challenges Locked Until Team Discussion Is Complete</div>
+                <p class="text-xs sm:text-sm text-stone-700 font-semibold max-w-xl mx-auto">
+                  Make sure all 4 explorers have opened their secret clue cards and Team Captain <strong>${escapeHTML(captainInfo.playerName)}</strong> has checked off the 3 discussion boxes above!
+                </p>
+              </div>
+            ` : `
+              <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                <!-- PART A -->
+                <div class="bg-white/90 p-5 rounded-2xl border-3 ${state.partADone ? 'border-emerald-600' : 'border-amber-700'} shadow space-y-3">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-extrabold uppercase px-2.5 py-1 rounded-full bg-amber-800 text-amber-100">Challenge 1</span>
+                    ${state.partADone ? '<span class="text-xs font-extrabold text-emerald-700">✅ Solved!</span>' : ''}
+                  </div>
+                  <p class="font-display font-bold text-base sm:text-lg text-stone-900">${island.partA.question}</p>
+                  <div class="space-y-2">
+                    ${island.partA.options.map(opt => `
+                      <button
+                        ${state.partADone ? 'disabled' : ''}
+                        onclick="submitIslandAnswer('A', '${opt.id}')"
+                        class="w-full text-left p-3 rounded-xl border-2 font-bold text-sm flex items-center gap-3 transition ${
+                          state.partADone && opt.id === island.partA.correct
+                            ? 'bg-emerald-100 border-emerald-600 text-emerald-950'
+                            : 'bg-amber-50 hover:bg-amber-200/80 border-amber-400 text-stone-900'
+                        }">
+                        <span class="text-2xl">${opt.icon}</span>
+                        <span>${opt.text}</span>
+                      </button>
+                    `).join('')}
+                  </div>
+                </div>
+
+                <!-- PART B -->
+                <div class="bg-white/90 p-5 rounded-2xl border-3 ${state.partBDone ? 'border-emerald-600' : 'border-amber-700'} shadow space-y-3">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-extrabold uppercase px-2.5 py-1 rounded-full bg-amber-800 text-amber-100">Challenge 2</span>
+                    ${state.partBDone ? '<span class="text-xs font-extrabold text-emerald-700">✅ Solved!</span>' : ''}
+                  </div>
+                  <p class="font-display font-bold text-base sm:text-lg text-stone-900">${island.partB.question}</p>
+                  <div class="space-y-2">
+                    ${island.partB.options.map(opt => `
+                      <button
+                        ${state.partBDone ? 'disabled' : ''}
+                        onclick="submitIslandAnswer('B', '${opt.id}')"
+                        class="w-full text-left p-3 rounded-xl border-2 font-bold text-sm flex items-center gap-3 transition ${
+                          state.partBDone && opt.id === island.partB.correct
+                            ? 'bg-emerald-100 border-emerald-600 text-emerald-950'
+                            : 'bg-amber-50 hover:bg-amber-200/80 border-amber-400 text-stone-900'
+                        }">
+                        <span class="text-2xl">${opt.icon}</span>
+                        <span>${opt.text}</span>
+                      </button>
+                    `).join('')}
+                  </div>
+                </div>
+              </div>
+            `}
+          </section>
+        </div>
+      `;
+    }
+
+    /* Secret Pass-the-Device Modal */
+    function openSecretClueModal(clueIdx) {
+      SoundFX.pageFlip();
+      const island = ISLANDS.find(i => i.id === state.activeIslandId) || ISLANDS[0];
+      const clue = island.clues[clueIdx];
+      const pInfo = getPlayerForRole(clue.roleIndex, island.id);
+
+      openModal(`
+        <div class="space-y-4">
+          <div class="bg-amber-900 text-amber-100 px-4 py-2.5 rounded-xl flex items-center justify-between">
+            <div class="flex items-center gap-2 text-xs sm:text-sm font-extrabold">
+              <span>👀</span>
+              <span>EYES ONLY FOR: ${escapeHTML(pInfo.playerName).toUpperCase()} (${pInfo.role.title})</span>
+            </div>
+            <span class="text-xl">${pInfo.role.icon}</span>
+          </div>
+
+          <div class="parchment-inner p-5 space-y-3">
+            <div class="text-xs font-extrabold uppercase tracking-wider text-amber-800">${clue.cardTitle}</div>
+            <p class="text-base sm:text-lg leading-relaxed font-bold text-stone-900">
+              "${clue.passage}"
+            </p>
+            <div class="pt-2 border-t border-amber-700/20">
+              <div class="text-[11px] font-extrabold uppercase text-emerald-800 mb-1">🔍 Key Evidence Words:</div>
+              <div class="flex flex-wrap gap-1.5">
+                ${clue.keywords.map(kw => `<span class="bg-emerald-100 border border-emerald-500 text-emerald-950 px-2.5 py-0.5 rounded-lg text-xs font-extrabold">${kw}</span>`).join('')}
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-sky-100 border-2 border-sky-500 p-3.5 rounded-xl text-xs sm:text-sm font-bold text-sky-950">
+            <strong>Your Mission Duty (${pInfo.role.title}):</strong> ${clue.prompt}
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-1">
+            <span class="text-xs font-bold text-stone-600">When ready, hide this card and share your clue aloud!</span>
+            <button onclick="markClueReadAndClose(${clueIdx})" class="btn-pirate w-full sm:w-auto px-6 py-3 rounded-xl text-sm">
+              ✓ I've Read My Clue — Hide & Pass Device
+            </button>
+          </div>
+        </div>
+      `);
+    }
+
+    function markClueReadAndClose(clueIdx) {
+      SoundFX.click();
+      state.openedClues[clueIdx] = true;
+      closeModal();
+      saveState();
+      render();
+    }
+
+    function toggleDiscussionCheck(cIdx) {
+      SoundFX.click();
+      state.discussionChecks[cIdx] = !state.discussionChecks[cIdx];
+      saveState();
+      render();
+    }
+
+    function submitIslandAnswer(part, selectedId) {
+      const island = ISLANDS.find(i => i.id === state.activeIslandId) || ISLANDS[0];
+      const challenge = part === 'A' ? island.partA : island.partB;
+
+      if (part === 'A') state.partAAttempts++;
+      else state.partBAttempts++;
+
+      if (selectedId === challenge.correct) {
+        SoundFX.success();
+        if (part === 'A') state.partADone = true;
+        else state.partBDone = true;
+
+        const attempts = part === 'A' ? state.partAAttempts : state.partBAttempts;
+        const earned = attempts === 1 ? 100 : 70;
+        if (!state.completedIslands.includes(island.id)) {
+          state.score += earned;
+        }
+
+        saveState();
+        render();
+
+        // Check if BOTH parts are now complete!
+        if (state.partADone && state.partBDone) {
+          setTimeout(() => completeIslandCelebration(island), 350);
+        } else {
+          showToast(`✅ Correct! +${earned} pts! Now solve the second challenge.`);
+        }
+      } else {
+        SoundFX.error();
+        openModal(`
+          <div class="text-center space-y-4">
+            <div class="text-5xl">🧭</div>
+            <h3 class="font-pirate text-2xl font-bold text-rose-900">Not Quite, Explorers!</h3>
+            <p class="text-stone-800 text-sm sm:text-base font-bold">
+              Check your team's four secret clue cards again! One of your teammates holds the exact evidence needed.
+            </p>
+            <div class="parchment-inner p-4 text-left text-xs sm:text-sm font-bold text-amber-950">
+              💡 <strong>Clue Hunter Tip:</strong> ${challenge.hint}
+            </div>
+            <button onclick="closeModal()" class="btn-pirate px-6 py-3 rounded-xl text-sm">
+              Re-read Clues & Try Again
+            </button>
+          </div>
+        `);
+      }
+    }
+
+    function completeIslandCelebration(island) {
+      SoundFX.fanfare();
+      const firstTime = !state.completedIslands.includes(island.id);
+      if (firstTime) {
+        state.completedIslands.push(island.id);
+        state.badges.push({
+          islandId: island.id,
+          name: island.badgeName,
+          icon: island.badgeIcon
+        });
+      }
+      saveState();
+
+      const nextIslandId = island.id + 1;
+      const nextNote = nextIslandId <= 5
+        ? `Roles will now rotate clockwise for <strong>Island ${nextIslandId}</strong>!`
+        : `You now have ALL 5 fragments! The <strong>Final Treasure Vault</strong> is unlocked!`;
+
+      openModal(`
+        <div class="text-center space-y-4">
+          <div class="text-6xl anim-glow">${island.badgeIcon}</div>
+          <span class="bg-emerald-600 text-white text-xs font-extrabold uppercase px-3 py-1 rounded-full">
+            Treasure Fragment ${island.id} of 5 Unlocked!
+          </span>
+          <h3 class="font-pirate text-2xl sm:text-3xl font-bold text-amber-950">
+            ${island.shortName} Complete!
+          </h3>
+          <div class="parchment-inner p-4 space-y-2">
+            <div class="text-xs font-extrabold uppercase text-amber-900">Fragment Clue Carved Into Your Map:</div>
+            <p class="font-display font-bold text-base sm:text-lg text-emerald-900">"${island.fragmentClue}"</p>
+          </div>
+          <div class="bg-amber-200/80 border border-amber-500 p-3 rounded-xl text-xs sm:text-sm font-bold text-amber-950">
+            🏆 Teamwork Badge Earned: <strong>${island.badgeName}</strong><br/>
+            🔄 ${nextNote}
+          </div>
+          <div class="pt-2">
+            <button onclick="closeModal(); goToMap();" class="btn-emerald px-7 py-3.5 rounded-2xl text-base">
+              Return to Archipelago Map 🗺️
+            </button>
+          </div>
+        </div>
+      `);
+    }
+
+    /* -------------------------------------------------------------------------
+       SCREEN 5: FINAL TREASURE CHALLENGE (COMBINING ALL 5 FRAGMENTS)
+       ------------------------------------------------------------------------- */
+    function startFinalChallenge() {
+      SoundFX.fanfare();
+      state.screen = 'final';
+      window._finalSelectedLoc = null;
+      window._finalSelectedEvidence = [];
+      saveState();
+      render();
+    }
+
+    function renderFinalChallengeScreen(container) {
+      const evidenceItems = [
+        { id: 'e1', label: 'Jungle Fragment: Hidden beside Twin Banyan Trees (NOT waterfall).' },
+        { id: 'e2', label: 'Village Fragment: Sail at midnight when harbour tide is low.' },
+        { id: 'e3', label: 'Temple Fragment: Travel due NORTH from the Sun Pillar.' },
+        { id: 'e4', label: 'Beach Fragment: Cross Coral Reef at SUNRISE over the stone bridge.' },
+        { id: 'e5', label: 'Dragon Fragment: Hum softly past Ignis to claim the Crown Key.' }
+      ];
+
+      const locations = [
+        { id: 'loc1', title: 'South Waterfall Lagoon', desc: 'South of the Sun Pillar, sailing through high waves at noon.' },
+        { id: 'loc2', title: 'Northern Twin-Banyan Sanctuary', desc: 'Due NORTH of the Sun Pillar, across the sunrise stone bridge, beside the Twin Banyan Trees.' },
+        { id: 'loc3', title: 'Eastern Bamboo Volcano', desc: 'East of Mount Ember inside the dark bat cave.' }
+      ];
+
+      container.innerHTML = `
+        <div class="parchment-card p-5 sm:p-8 anim-pop space-y-6">
+          <div class="text-center max-w-3xl mx-auto space-y-2">
+            <span class="bg-amber-900 text-amber-200 text-xs font-extrabold uppercase tracking-widest px-4 py-1 rounded-full">
+              Final Convergence Challenge
+            </span>
+            <h2 class="font-pirate text-2xl sm:text-4xl font-bold text-amber-950">Unlock the Lost Treasure Chest!</h2>
+            <p class="text-stone-800 text-sm sm:text-base font-semibold">
+              All five map fragments have snapped together! Read the Master Riddle Scroll below, review your 5 island clues, and work together as a team to prove the exact treasure location.
+            </p>
+          </div>
+
+          <!-- Master Connecting Reading Passage -->
+          <div class="parchment-inner p-5 border-2 border-amber-700 space-y-2">
+            <div class="text-xs font-extrabold uppercase text-amber-900">📜 The Complete Master Scroll</div>
+            <p class="text-sm sm:text-base font-bold text-stone-900 leading-relaxed">
+              "Brave explorers who hold all five fragments: To find the Lost Treasure of Captain Aurelia, begin at the ancient Sun Pillar and journey <span class="text-purple-800 underline">due NORTH</span>. Wait until <span class="text-sky-800 underline">SUNRISE</span> when the low tide reveals the stone bridge across the Coral Reef. Once ashore, avoid the muddy waterfall and search behind the <span class="text-emerald-800 underline">Twin Banyan Trees</span>, where your Crown Key unlocks the golden chest!"
+            </p>
+          </div>
+
+          <!-- Step 1: Review 5 Collected Fragment Clues -->
+          <div class="space-y-2">
+            <h3 class="font-display font-bold text-lg text-amber-950">1. Select TWO Supporting Clues from Your Islands That Prove the Route:</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+              ${evidenceItems.map(ev => `
+                <label class="flex items-start gap-2.5 bg-white/90 p-3 rounded-xl border-2 border-amber-500 cursor-pointer hover:bg-amber-50">
+                  <input type="checkbox" value="${ev.id}" onchange="toggleFinalEvidence('${ev.id}', this)" class="mt-1 w-5 h-5 accent-emerald-600" />
+                  <span class="text-xs sm:text-sm font-bold text-stone-800">${ev.label}</span>
+                </label>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Step 2: Choose Final Location -->
+          <div class="space-y-2">
+            <h3 class="font-display font-bold text-lg text-amber-950">2. Choose the Exact Final Treasure Location:</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              ${locations.map(loc => `
+                <label class="p-4 rounded-2xl border-2 border-amber-600 bg-white/90 hover:bg-amber-100 cursor-pointer flex flex-col justify-between space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="font-display font-bold text-base text-amber-950">${loc.title}</span>
+                    <input type="radio" name="final-loc" value="${loc.id}" onchange="window._finalSelectedLoc='${loc.id}'" class="w-5 h-5 accent-amber-700" />
+                  </div>
+                  <p class="text-xs font-semibold text-stone-700">${loc.desc}</p>
+                </label>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- Step 3: Team Discussion & Unlock Button -->
+          <div class="bg-amber-950 text-amber-100 p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-xs sm:text-sm font-semibold">
+              💬 <strong>Final Crew Check:</strong> Does every explorer agree on the location and the two supporting clues?
+            </div>
+            <button onclick="validateFinalTreasure()" class="btn-pirate px-7 py-3.5 rounded-2xl text-base sm:text-lg shrink-0">
+              🗝️ UNLOCK THE TREASURE CHEST
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function toggleFinalEvidence(evId, checkbox) {
+      SoundFX.click();
+      if (!window._finalSelectedEvidence) window._finalSelectedEvidence = [];
+      if (checkbox.checked) {
+        if (!window._finalSelectedEvidence.includes(evId)) window._finalSelectedEvidence.push(evId);
+      } else {
+        window._finalSelectedEvidence = window._finalSelectedEvidence.filter(id => id !== evId);
+      }
+    }
+
+    function validateFinalTreasure() {
+      const loc = window._finalSelectedLoc;
+      const evs = window._finalSelectedEvidence || [];
+      // Correct location is loc2, and valid supporting clues for that route include e1, e3, e4
+      const validCluesSelected = evs.filter(id => ['e1', 'e3', 'e4'].includes(id));
+
+      if (loc === 'loc2' && validCluesSelected.length >= 2) {
+        SoundFX.fanfare();
+        if (!state.finalCompleted) {
+          state.score += 250;
+          state.finalCompleted = true;
+        }
+        state.screen = 'victory';
+        saveState();
+        render();
+      } else {
+        SoundFX.error();
+        openModal(`
+          <div class="text-center space-y-4">
+            <div class="text-5xl">🗺️</div>
+            <h3 class="font-pirate text-2xl font-bold text-rose-900">Check the Master Scroll Together!</h3>
+            <p class="text-sm sm:text-base font-bold text-stone-800">
+              Make sure your team has selected:
+              <br/>1) At least <strong>TWO</strong> supporting island clues that match the Master Scroll (Direction, Tide Timing, or Trees), AND
+              <br/>2) The exact treasure location north of the Sun Pillar!
+            </p>
+            <button onclick="closeModal()" class="btn-pirate px-6 py-2.5 rounded-xl text-sm">Review & Try Again</button>
+          </div>
+        `);
+      }
+    }
+
+    /* -------------------------------------------------------------------------
+       SCREEN 6: ANIMATED VICTORY SCENE, PERFORMANCE REPORT & CERTIFICATE
+       ------------------------------------------------------------------------- */
+    function renderVictoryScreen(container) {
+      const maxScore = 1250;
+      const accuracyPct = Math.min(100, Math.round((state.score / maxScore) * 100));
+
+      container.innerHTML = `
+        <div class="parchment-card p-5 sm:p-8 anim-pop space-y-6">
+          <!-- Victory Chest Animation Banner -->
+          <div class="relative rounded-2xl overflow-hidden border-4 border-amber-500 bg-gradient-to-b from-amber-950 via-amber-900 to-stone-950 p-6 sm:p-8 text-center text-amber-100 shadow-2xl">
+            <!-- Animated Sunburst Rays -->
+            <div class="flex justify-center mb-3">
+              <div class="anim-glow inline-block">
+                <svg width="150" height="120" viewBox="0 0 160 130">
+                  <!-- Golden Glow Behind Open Chest -->
+                  <polygon points="80,55 15,5 145,5" fill="#fde047" opacity="0.35"/>
+                  <polygon points="80,55 0,30 160,30" fill="#fbbf24" opacity="0.25"/>
+                  <!-- Open Lid -->
+                  <path d="M25,45 Q80,8 135,45 L128,56 L32,56 Z" fill="#92400e" stroke="#fbbf24" stroke-width="3"/>
+                  <!-- Overflowing Gold Coins & Gems -->
+                  <circle cx="55" cy="56" r="10" fill="#facc15"/>
+                  <circle cx="75" cy="52" r="12" fill="#fde047"/>
+                  <circle cx="96" cy="55" r="11" fill="#facc15"/>
+                  <polygon points="80,42 87,52 80,62 73,52" fill="#38bdf8"/>
+                  <!-- Chest Base -->
+                  <rect x="25" y="56" width="110" height="58" rx="8" fill="#78350f" stroke="#fbbf24" stroke-width="3.5"/>
+                  <rect x="70" y="52" width="20" height="24" rx="4" fill="#fbbf24" stroke="#451a03" stroke-width="2"/>
+                </svg>
+              </div>
+            </div>
+
+            <div class="inline-block bg-amber-400 text-amber-950 font-extrabold text-xs uppercase tracking-widest px-4 py-1 rounded-full mb-2">
+              ✨ Legendary Victory ✨
+            </div>
+            <h1 class="font-pirate text-xl sm:text-3xl md:text-4xl font-black text-amber-300 drop-shadow">
+              CONGRATULATIONS, YOUNG EXPLORERS! YOU HAVE FOUND THE LOST TREASURE!
+            </h1>
+            <p class="text-amber-100/90 text-sm sm:text-base font-semibold max-w-2xl mx-auto mt-2">
+              Crew <strong class="text-amber-300">${escapeHTML(state.teamName)}</strong> (${state.players.map(escapeHTML).join(', ')}) combined every clue through teamwork, careful reading, and discussion!
+            </p>
+          </div>
+
+          <!-- Team Assessment & Performance Report -->
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <div class="lg:col-span-2 parchment-inner p-5 space-y-4">
+              <div class="flex items-center justify-between border-b border-amber-700/30 pb-2">
+                <h3 class="font-display text-xl font-bold text-amber-950">📊 Team Reading & Collaboration Report</h3>
+                <span class="bg-emerald-600 text-white text-xs font-extrabold px-3 py-1 rounded-full">Master Explorers</span>
+              </div>
+
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+                <div class="bg-white/90 p-3 rounded-xl border border-amber-400">
+                  <div class="text-xs font-extrabold text-stone-500 uppercase">Islands</div>
+                  <div class="font-display text-2xl font-bold text-emerald-700">5 / 5</div>
+                </div>
+                <div class="bg-white/90 p-3 rounded-xl border border-amber-400">
+                  <div class="text-xs font-extrabold text-stone-500 uppercase">Total Points</div>
+                  <div class="font-display text-2xl font-bold text-amber-700">${state.score}</div>
+                </div>
+                <div class="bg-white/90 p-3 rounded-xl border border-amber-400">
+                  <div class="text-xs font-extrabold text-stone-500 uppercase">Mastery</div>
+                  <div class="font-display text-2xl font-bold text-sky-700">${accuracyPct}%</div>
+                </div>
+                <div class="bg-white/90 p-3 rounded-xl border border-amber-400">
+                  <div class="text-xs font-extrabold text-stone-500 uppercase">Badges</div>
+                  <div class="font-display text-2xl font-bold text-purple-700">5 🏆</div>
+                </div>
+              </div>
+
+              <!-- ESL Skill Breakdown -->
+              <div class="space-y-2 text-xs sm:text-sm">
+                ${[
+                  { skill: 'Scanning & Specific Details (Jungle)', level: 'Achieved • Located landmarks using exact scout clues' },
+                  { skill: 'Vocabulary & Context Clues (Village)', level: 'Achieved • Decoded treacherous, provisions, decipher, concealed' },
+                  { skill: 'Main Idea & Inference (Temple)', level: 'Achieved • Inferred volcanic evacuation from wall tablets' },
+                  { skill: 'Sequencing & Cause/Effect (Beach)', level: 'Achieved • Ordered diary timeline & tidal bridge link' },
+                  { skill: 'Comprehension, Evidence & Collaboration (Cave & Vault)', level: 'Achieved • Solved dragon riddle & shared 4-role leadership' }
+                ].map(item => `
+                  <div class="bg-white/80 p-2.5 rounded-xl border border-amber-300 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                    <span class="font-extrabold text-amber-950">✅ ${item.skill}</span>
+                    <span class="text-emerald-800 font-bold text-xs">${item.level}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <!-- Certificate Download Card -->
+            <div class="bg-amber-100/90 border-3 border-amber-700 rounded-2xl p-5 flex flex-col justify-between text-center space-y-4">
+              <div class="space-y-2">
+                <div class="text-5xl">📜</div>
+                <h3 class="font-pirate text-xl font-bold text-amber-950">Official Explorer Certificate</h3>
+                <p class="text-xs sm:text-sm font-semibold text-stone-700">
+                  Download your team's personalized certificate featuring all 4 explorers' names, score, and teamwork badges!
+                </p>
+              </div>
+
+              <div class="space-y-2.5">
+                <button onclick="downloadTeamCertificate()" class="btn-pirate w-full py-3.5 px-4 rounded-xl text-sm sm:text-base flex items-center justify-center gap-2">
+                  <span>⬇️</span><span>Download Team Certificate</span>
+                </button>
+                <button onclick="confirmResetModal()" class="w-full py-2.5 px-4 rounded-xl bg-stone-200 hover:bg-stone-300 border border-stone-400 text-stone-800 font-bold text-xs sm:text-sm">
+                  ↺ Play Again with Another Crew
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hidden High-Res Canvas for Certificate Generation -->
+          <canvas id="cert-canvas" width="1200" height="850" class="hidden"></canvas>
+        </div>
+      `;
+    }
+
+    /* High-Resolution PNG Certificate Generator */
+    function downloadTeamCertificate() {
+      SoundFX.fanfare();
+      const canvas = document.getElementById('cert-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+
+      // Background parchment gradient
+      const grad = ctx.createLinearGradient(0, 0, 1200, 850);
+      grad.addColorStop(0, '#fffbeb');
+      grad.addColorStop(0.5, '#fef3c7');
+      grad.addColorStop(1, '#fde68a');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 1200, 850);
+
+      // Ornate Double Border
+      ctx.strokeStyle = '#78350f';
+      ctx.lineWidth = 16;
+      ctx.strokeRect(32, 32, 1136, 786);
+
+      ctx.strokeStyle = '#d97706';
+      ctx.lineWidth = 5;
+      ctx.strokeRect(54, 54, 1092, 742);
+
+      // Corner Gold Rosettes
+      [[54,54],[1146,54],[54,796],[1146,796]].forEach(([cx, cy]) => {
+        ctx.beginPath();
+        ctx.arc(cx, cy, 20, 0, Math.PI * 2);
+        ctx.fillStyle = '#b45309';
+        ctx.fill();
+        ctx.strokeStyle = '#fef08a';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+      });
+
+      // Header Text
+      ctx.fillStyle = '#92400e';
+      ctx.font = 'bold 24px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('YEAR 6 COLLABORATIVE ESL ADVENTURE', 600, 125);
+
+      ctx.fillStyle = '#451a03';
+      ctx.font = 'bold 54px Georgia, serif';
+      ctx.fillText('CERTIFICATE OF EXPLORATION', 600, 190);
+
+      ctx.fillStyle = '#b45309';
+      ctx.font = 'bold 26px Georgia, serif';
+      ctx.fillText('READING QUEST: THE LOST TREASURE', 600, 238);
+
+      // Divider
+      ctx.beginPath();
+      ctx.moveTo(260, 265);
+      ctx.lineTo(940, 265);
+      ctx.strokeStyle = '#d97706';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      // Awarded To
+      ctx.fillStyle = '#57534e';
+      ctx.font = 'italic 24px Georgia, serif';
+      ctx.fillText('This award is proudly presented to Crew', 600, 315);
+
+      ctx.fillStyle = '#78350f';
+      ctx.font = 'bold 46px Georgia, serif';
+      ctx.fillText(state.teamName || 'Sea Explorers', 600, 375);
+
+      // 4 Crew Members Box
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+      ctx.fillRect(160, 405, 880, 95);
+      ctx.strokeStyle = '#b45309';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(160, 405, 880, 95);
+
+      ctx.fillStyle = '#451a03';
+      ctx.font = 'bold 26px sans-serif';
+      ctx.fillText(state.players.join('   •   '), 600, 462);
+
+      // Achievement Summary
+      ctx.fillStyle = '#292524';
+      ctx.font = '22px sans-serif';
+      ctx.fillText('For demonstrating outstanding reading comprehension, vocabulary mastery,', 600, 550);
+      ctx.fillText('textual evidence skills, and 4-role collaborative teamwork across all 5 islands.', 600, 584);
+
+      // Score & Badges Pill
+      ctx.fillStyle = '#065f46';
+      ctx.font = 'bold 26px sans-serif';
+      ctx.fillText(`Total Quest Score: ${state.score} Points   |   5 of 5 Map Fragments Unlocked`, 600, 645);
+
+      // Footer Date & Seal
+      const today = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+      ctx.fillStyle = '#57534e';
+      ctx.font = 'bold 20px sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(`Date Completed: ${today}`, 120, 745);
+
+      ctx.textAlign = 'right';
+      ctx.fillText('Signed: Captain Aurelia & Guild of Explorers', 1080, 745);
+
+      // Trigger PNG Download
+      try {
+        const link = document.createElement('a');
+        link.download = `Reading_Quest_Certificate_${(state.teamName || 'Team').replace(/\s+/g, '_')}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        showToast('📜 Certificate downloaded!');
+      } catch (e) {
+        showToast('Certificate generated! Right-click to save if blocked.');
+      }
+    }
+
+    /* =========================================================================
+       6. INITIALIZE ON WINDOW LOAD
+       ========================================================================= */
+    window.onload = function () {
+      render();
+    };
+  </script>
+</body>
+</html>
